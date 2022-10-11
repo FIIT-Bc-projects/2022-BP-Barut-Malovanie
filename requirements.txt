@@ -1,0 +1,5 @@
+numpy==1.23.3
+tensorflow==2.10.0
+keras==2.10.0
+notebook==6.4.12
+matplotlib==3.6.0
