@@ -7,7 +7,7 @@ matplotlib.use('Agg')
 from tensorflow import keras
 import numpy as np
 app = Flask(__name__)
-model = keras.models.load_model("../saved/trained_model.h5")
+model = keras.models.load_model("../trained_models/trained_model.h5")
 
 
 @app.route("/", methods=['GET', 'POST'])
