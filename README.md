@@ -7,3 +7,5 @@ Required libraries are in requirements.txt file and listed below:
 - keras
 - notebook
 - numpy
+- matplotlib
+- pydot
