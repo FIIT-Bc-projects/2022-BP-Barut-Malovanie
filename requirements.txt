@@ -4,3 +4,4 @@ keras==2.10.0
 notebook==6.4.12
 matplotlib==3.6.0
 Flask==2.2.2
+pydot==1.4.2
