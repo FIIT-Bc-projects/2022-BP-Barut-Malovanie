@@ -9,16 +9,19 @@ class Models:
     def __init__(self):
         pass
 
+    @classmethod
     @property
-    def generator(self):
+    def generator(cls):
         input_text = Input(shape=(50,))
-        embed = Embedding(32_000, 50, input_length=50)(input_text)
+        embed = Embedding(32_000, 1, input_length=50)(input_text)
+        embed = Flatten()(embed)
         embed = Dense(8*8)(embed)
-        embed = Reshape((8, 8, 3, 1))
+        embed = Reshape((8, 8, 1))(embed)
 
         input_latent = Input(shape=(128,))
-        latent = Dense(473*8*8*3)(input_latent)
-        latent = Reshape((8, 8, 3, 437))(latent)
+        latent = Dense(473*8*8)(input_latent)
+        latent = LeakyReLU(alpha=0.2)(latent)
+        latent = Reshape((8, 8, 473))(latent)
 
         gen = Concatenate()([embed, latent])
         gen = Conv2DTranspose(256, (5, 5), strides=(2, 2), padding='same')(gen)
@@ -29,12 +32,14 @@ class Models:
 
         gen = Conv2DTranspose(256, (5, 5), strides=(2, 2), padding='same')(gen)
         gen = LeakyReLU(alpha=0.2)(gen)
-        out = Activation('tahn')(gen)
+        gen = Conv2D(3, (5, 5), padding='same')(gen)
+        out = Activation('tanh')(gen)
         model = Model([embed, latent], out)
         return model
 
+    @classmethod
     @property
-    def discriminator(self):
+    def discriminator(cls) -> Model:
         input = Input(shape=(64, 64, 3))
         disc = Conv2D(64, (4, 4), strides=(2, 2), padding='same')(input)
         disc = LeakyReLU(alpha=0.2)(disc)
