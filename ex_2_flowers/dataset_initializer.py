@@ -6,6 +6,8 @@ from pathlib import Path
 from keras.preprocessing.text import Tokenizer
 from keras.utils import pad_sequences
 from tensorflow.python.data import AUTOTUNE
+from tensorflow.python.ops.image_ops_impl import ResizeMethod
+
 
 class DatasetInitializer:
     def __init__(self, regather=False):
@@ -76,11 +78,12 @@ class DatasetInitializer:
     @classmethod
     def process_image(cls, img):
         img = tf.io.decode_jpeg(img, channels=3)
-        return tf.image.resize(img, [64, 64])
+        return tf.image.resize(img, [64, 64], method=ResizeMethod.BICUBIC, antialias=True)
 
     def process_path(self, file_path):
         file_path = bytes.decode(file_path.numpy())
         label = self.get_label(file_path)
         img = tf.io.read_file(file_path)
         img = self.process_image(img)
+        img = img / 255.0
         return img, label
