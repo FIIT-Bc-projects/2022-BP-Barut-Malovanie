@@ -24,7 +24,6 @@ def visualize_images(images, shape, save_path):
         pyplot.axis('off')
         pyplot.imshow(images[i])
     pyplot.savefig("saved/" + save_path, bbox_inches='tight')
-    pyplot.close()
 
 
 def generate_latent_points(latent_dim, n):
@@ -44,6 +43,7 @@ def generate_con_fake_samples(g_model, inputs, latent_dim, n_samples):
     if np.shape(inputs)[0] != n_samples:
         return []
     latent_vec = generate_latent_points(latent_dim, n_samples)
-    X = g_model.predict([inputs, latent_vec])
+    X = g_model.predict([inputs, latent_vec], verbose=0)
     y = np.zeros((n_samples, 1))
     return X, y
+

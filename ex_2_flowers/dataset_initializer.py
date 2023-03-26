@@ -1,6 +1,6 @@
 import os
+
 import tensorflow as tf
-import random
 
 from pathlib import Path
 from keras.preprocessing.text import Tokenizer
@@ -10,22 +10,26 @@ from tensorflow.python.ops.image_ops_impl import ResizeMethod
 
 
 class DatasetInitializer:
-    def __init__(self, regather=False):
+    def __init__(self, batch_size, regather=False):
         if regather:
-            self.gather_descriptions('ex_2_flowers/data/labels_test')
+            self.gather_descriptions('data/labels_ttest')
         self.tokenizer = self.initialize_tokenizer()
-        self.dict, self.embeddings_arr = self.create_embedding_dict()
-        self.image_count = len(os.listdir('ex_2_flowers/data/flowers_test'))
-        self.dataset = self.initialize_dataset()
+        self.embeddings_arr = self.create_embedding_arr()
+        self.image_count = len(os.listdir('data/flowers_ttest'))
+        self.dataset = self.initialize_dataset(batch_size)
 
     def load_dataset(self):
         return self.dataset
 
-    def initialize_dataset(self):
-        dataset = tf.data.Dataset.list_files('ex_2_flowers/data/flowers_test/*', shuffle=False)
+    def initialize_dataset(self, batch_size):
+        dataset = tf.data.Dataset.list_files('data/flowers_ttest/*', shuffle=False)
         dataset = dataset.shuffle(self.image_count, reshuffle_each_iteration=True)
         dataset = dataset.take(self.image_count)
         dataset = dataset.map(lambda x: tf.py_function(self.process_path, [x], [tf.float32, tf.int32]),
+                              num_parallel_calls=AUTOTUNE)
+        dataset = dataset.cache()
+        dataset = dataset.batch(batch_size)
+        dataset = dataset.map(lambda x, y: tf.py_function(self.choose_labels, [x, y], [tf.float32, tf.int32]),
                               num_parallel_calls=AUTOTUNE)
         return dataset
 
@@ -48,32 +52,20 @@ class DatasetInitializer:
     @classmethod
     def initialize_tokenizer(cls, vocab_size=32_000, oov="<OOV>"):
         tokenizer = Tokenizer(vocab_size, oov_token=oov)
-        with open('ex_2_flowers/data/all_descriptions.txt', 'r') as file:
+        with open('data/all_descriptions.txt', 'r') as file:
             tokenizer.fit_on_texts(file.readlines())
         return tokenizer
 
-    def create_embedding_dict(self, path_to_dir='ex_2_flowers/data/labels_test', max_length_seq=50):
-        path = Path(path_to_dir)
-        embedding_t = None
-        names = []
-        indexes = []
-        for file in path.iterdir():
-            with open(file, "r") as f:
-                names.append(file.name[-15:-4]+'.jpg')
-                indexes.append(int(file.name[-9:-4])-1)
-                processed_t = tf.constant(self.process_text_input(self.tokenizer, f.readlines(), max_length_seq))
-                processed_t = tf.reshape(processed_t, (1, 10, 50))
-                if embedding_t is None:
-                    embedding_t = processed_t
-                else:
-                    embedding_t = tf.concat([embedding_t, processed_t], 0)
-        return tf.lookup.StaticHashTable(tf.lookup.KeyValueTensorInitializer(tf.constant(names), tf.constant(indexes)), default_value=-1), embedding_t
+    def create_embedding_arr(self, max_length_seq=20):
+        with open('data/all_descriptions.txt', "r") as f:
+            processed_t = tf.constant(self.process_text_input(self.tokenizer, f.readlines(), max_length_seq))
+            return processed_t
 
-    def get_label(self, file_path):
-        name = file_path[-15:]
-        index = self.dict.lookup(tf.constant([name]))[0]
-        label = random.choice(self.embeddings_arr[index])
-        return label
+    def choose_labels(self, img, labels):
+        indexes = tf.random.uniform([len(labels)], 0, 10, dtype=tf.int32)
+        indexes = 0
+        label = tf.gather(self.embeddings_arr, labels+indexes)
+        return img, label
 
     @classmethod
     def process_image(cls, img):
@@ -81,9 +73,9 @@ class DatasetInitializer:
         return tf.image.resize(img, [64, 64], method=ResizeMethod.BICUBIC, antialias=True)
 
     def process_path(self, file_path):
-        file_path = bytes.decode(file_path.numpy())
-        label = self.get_label(file_path)
         img = tf.io.read_file(file_path)
+        index = int(bytes.decode(file_path.numpy())[-9:-4])
+        index = (index - 1) * 10
         img = self.process_image(img)
         img = img / 255.0
-        return img, label
+        return img, index

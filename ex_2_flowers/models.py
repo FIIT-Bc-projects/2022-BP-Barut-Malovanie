@@ -7,23 +7,25 @@ from keras.models import Model
 
 class Models:
     def __init__(self):
-        pass
+        self.generator_model = self.generator
+        self.discriminator_model = self.discriminator
+        self.gan_model = self.gan(self.generator_model, self.discriminator_model)
 
     @classmethod
     @property
     def generator(cls):
-        input_text = Input(shape=(50,))
-        embed = Embedding(32_000, 1, input_length=50)(input_text)
+        input_text = Input(shape=(20,))
+        embed = Embedding(32_000, 1, input_length=20)(input_text)
         embed = Flatten()(embed)
         embed = Dense(8*8)(embed)
         embed = Reshape((8, 8, 1))(embed)
 
         input_latent = Input(shape=(128,))
-        latent = Dense(473*8*8)(input_latent)
-        latent = LeakyReLU(alpha=0.2)(latent)
-        latent = Reshape((8, 8, 473))(latent)
+        gen = Dense(473*8*8)(input_latent)
+        gen = LeakyReLU(alpha=0.2)(gen)
+        gen = Reshape((8, 8, 473))(gen)
 
-        gen = Concatenate()([embed, latent])
+        gen = Concatenate()([gen, embed])
         gen = Conv2DTranspose(256, (5, 5), strides=(2, 2), padding='same')(gen)
         gen = LeakyReLU(alpha=0.2)(gen)
 
@@ -34,7 +36,7 @@ class Models:
         gen = LeakyReLU(alpha=0.2)(gen)
         gen = Conv2D(3, (5, 5), padding='same')(gen)
         out = Activation('tanh')(gen)
-        model = Model([embed, latent], out)
+        model = Model([input_text, input_latent], out)
         return model
 
     @classmethod
@@ -68,15 +70,21 @@ class Models:
         disc = Flatten()(disc)
         out = Dense(1, activation='sigmoid')(disc)
         model = Model(input, out)
-        model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
+        model.compile(loss='binary_crossentropy', optimizer=Adam(learning_rate=0.0002, beta_1=0.5))
         return model
 
     @classmethod
     def gan(cls, gen, disc):
-        for layer in disc.layers:
-            layer.trainable = False
+        disc.trainable = False
         gan_output = disc(gen.output)
         model = Model(gen.input, gan_output)
-        model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.0002, beta_1=0.5))
+        model.compile(loss='binary_crossentropy', optimizer=Adam(learning_rate=0.0002, beta_1=0.5))
         return model
+
+    def save_gen(self, path):
+        self.generator_model.save(path)
+
+    def save_disc(self, path):
+        self.discriminator_model.save(path)
+
 
