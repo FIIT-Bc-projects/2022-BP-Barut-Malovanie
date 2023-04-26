@@ -10,21 +10,28 @@ from tensorflow.python.ops.image_ops_impl import ResizeMethod
 
 
 class DatasetInitializer:
-    def __init__(self, batch_size, regather=False):
+    def __init__(self, batch_size, regather=False, test=False):
+        if test:
+            self.images_path = 'data/flowers_test'
+            self.labels_path = 'data/labels_test'
+        else:
+            self.images_path = 'data/flowers'
+            self.labels_path = 'data/labels'
         if regather:
-            self.gather_descriptions('data/labels_ttest')
+            self.gather_descriptions(self.labels_path)
         self.tokenizer = self.initialize_tokenizer()
         self.embeddings_arr = self.create_embedding_arr()
-        self.image_count = len(os.listdir('data/flowers_ttest'))
+        self.image_count = len(os.listdir(self.images_path))
+        self.image_count = len(os.listdir(self.images_path))
         self.dataset = self.initialize_dataset(batch_size)
 
     def load_dataset(self):
         return self.dataset
 
     def initialize_dataset(self, batch_size):
-        dataset = tf.data.Dataset.list_files('data/flowers_ttest/*', shuffle=False)
-        dataset = dataset.shuffle(self.image_count, reshuffle_each_iteration=True)
-        dataset = dataset.take(self.image_count)
+        dataset = tf.data.Dataset.list_files(self.images_path+'/*/*', shuffle=False)
+        #dataset = dataset.shuffle(self.image_count, reshuffle_each_iteration=True)
+        #dataset = dataset.take(self.image_count)
         dataset = dataset.map(lambda x: tf.py_function(self.process_path, [x], [tf.float32, tf.int32]),
                               num_parallel_calls=AUTOTUNE)
         dataset = dataset.cache()

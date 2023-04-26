@@ -1,8 +1,31 @@
 import numpy as np
+import matplotlib
 from matplotlib import pyplot
 from numpy.random import randn
 import os
 import tensorflow as tf
+matplotlib.use('TkAgg')
+
+
+def save_loss_plot(disc_loss, gen_loss, path):
+    pyplot.plot(disc_loss, label='discriminator')
+    pyplot.plot(gen_loss, label='generator')
+    pyplot.xlabel("Epoch")
+    pyplot.ylabel("Loss")
+    pyplot.legend()
+    pyplot.savefig('saved/' + path)
+    pyplot.close()
+
+
+def save_acc_plot(acc_real, acc_fake, path):
+    pyplot.plot(acc_real, label='accuracy real')
+    pyplot.plot(acc_fake, label='accuracy fake')
+    pyplot.plot([0.5 for x in range(len(acc_real))], label='ideal accuracy')
+    pyplot.xlabel("Epoch")
+    pyplot.ylabel("Accuracy")
+    pyplot.legend()
+    pyplot.savefig('saved/' + path)
+    pyplot.close()
 
 
 def crate_saved_dir():
@@ -17,13 +40,14 @@ def mount_gpu():
         tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 
-def visualize_images(images, shape, save_path):
+def visualize_images(images, shape, save=False, save_path=None):
     n_images = np.shape(images)[0]
     for i in range(n_images):
         pyplot.subplot(*shape, 1 + i)
         pyplot.axis('off')
         pyplot.imshow(images[i])
-    pyplot.savefig("saved/" + save_path, bbox_inches='tight')
+    if save:
+        pyplot.savefig("saved/" + save_path, bbox_inches='tight')
 
 
 def generate_latent_points(latent_dim, n):
