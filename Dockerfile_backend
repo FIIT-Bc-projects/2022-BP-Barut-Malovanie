@@ -1,0 +1,22 @@
+# specify a base image
+FROM python:3.10-slim
+
+# switch to working directory
+WORKDIR /python-docker
+
+#copy requirements.txt file
+COPY requirements.txt requirements.txt
+
+#install libraries
+RUN pip3 install -r requirements.txt
+
+#create folder structure with needed files
+COPY ex_2_flowers/dataset_initializer.py ex_2_flowers/dataset_initializer.py
+COPY ex_2_flowers/utils.py ex_2_flowers/utils.py
+COPY trained_models/flowers_generator_model_100.h5  trained_models/flowers_generator_model_100.h5
+
+#copy the server code itself
+COPY backend  backend
+
+#run flask as module specifying path to app.pu and host
+CMD [ "python3", "-m" , "flask", "--app", "backend/app", "run", "--host=0.0.0.0"]
