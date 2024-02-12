@@ -1,0 +1,13 @@
+body {
+  min-height: 100vh;
+  background: #181818;
+}
+
+#app {
+  max-width: 1480px;
+  margin: 0 auto;
+  margin-top: 25vh;
+
+}
+
+
