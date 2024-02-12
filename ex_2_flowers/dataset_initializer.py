@@ -57,9 +57,9 @@ class DatasetInitializer:
         return padded
 
     @classmethod
-    def initialize_tokenizer(cls, vocab_size=32_000, oov="<OOV>"):
+    def initialize_tokenizer(cls, data_path="data/all_descriptions.txt", vocab_size=32_000, oov="<OOV>"):
         tokenizer = Tokenizer(vocab_size, oov_token=oov)
-        with open('data/all_descriptions.txt', 'r') as file:
+        with open(data_path, 'r') as file:
             tokenizer.fit_on_texts(file.readlines())
         return tokenizer
 

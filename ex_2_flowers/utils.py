@@ -4,7 +4,7 @@ from matplotlib import pyplot
 from numpy.random import randn
 import os
 import tensorflow as tf
-matplotlib.use('TkAgg')
+#matplotlib.use('TkAgg')
 
 
 def save_loss_plot(disc_loss, gen_loss, path):

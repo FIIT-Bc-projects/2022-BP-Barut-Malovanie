@@ -1,7 +1,7 @@
 /venv/
 /saves/
 /saved/
-/app/generated_image.png
+/backend/generated_image.png
 /.ipynb_checkpoints/
 /ex_2_flowers/data/
 /main_model/data/

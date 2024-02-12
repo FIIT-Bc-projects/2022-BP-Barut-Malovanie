@@ -6,3 +6,4 @@ matplotlib==3.6.0
 Flask==2.2.2
 pydot==1.4.2
 #git+https://github.com/openai/CLIP.git
+Werkzeug==2.2.2
