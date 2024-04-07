@@ -1,9 +1,7 @@
 /venv/
-/saves/
-/saved/
 /backend/generated_image.png
 /.ipynb_checkpoints/
-/ex_2_flowers/data/
-/main_model/data/
-/ex_2_flowers/saved/
 /.idea/*
+deep_learning/digits_gan/digits/
+deep_learning/*/saved/
+deep_learning/main_model/data/
