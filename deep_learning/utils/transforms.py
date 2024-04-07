@@ -16,3 +16,7 @@ exp_2_xd = v2.Compose([
             v2.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
 
+scale_for_metrics = v2.Compose([
+    v2.Resize(size=(399, 399), antialias=True),
+    v2.ToDtype(torch.float32, scale=True),
+])

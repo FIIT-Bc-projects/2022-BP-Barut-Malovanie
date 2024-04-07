@@ -1,14 +1,11 @@
 # Painting with neural networks
 
-Required libraries are in requirements.txt file and listed below:
+This repository contains code associated with Bachelor's Thesis, developed by [Jozef Barut](https://github.com/BarutJozef),
+with the supervision of [NGUYEN THU, Giang, doc., Ing., PhD.](https://github.com/giangzuzana) .
 
-- tensorflow
-- keras
-- notebook
-- numpy
-- matplotlib
-- pydot
- 
+Project aims to train a generative deep learning model for image synthesis. Encapsulating the result into
+web page that can be interaced with easily dockerizing this application.
+
 ## Machine learning 
 Machine learning part of this project has two models implemented.
 
@@ -43,6 +40,36 @@ begging of the scripts right after imports.
   as well as generates a row in the progress report plot._
 - to use GPU make sure you put 1 in the __determine_device__ function call like so: ```device = determine_device(1)```
 
+### Main Model
+
+Overview of the models architecture can be seen on the image below:
+
+*\*insert architecture picture**
+
+Training was done with __80%-20%  train-test__ split, to test the generalization of model on unseen prompts and for
+__zero_shot__ generation.
+
+Parameters for training were:
+- __200 epochs__, 
+- __latent vector__ size:  __100__ 
+- __CLIP__ encoded text vector size: __512__
+- __1044__ features maps going into the generator __1024__ for latent vector, with concatenated __20__ for encoded text
+
+Complete inner workings can be seen in [models.py](deep_learning/main_model/models.py).
+
+Results:
+
+<img align="center" width="100%" height="100%" src="deep_learning/main_model/generated_images.png">
+
+### Evaluation
+
+Evaluation of model from the technical standpoint was conducted with two metrics, both computed over the entire
+dataset, separately for training and test images.
+
+| Metric            |  Train   |   Test |
+|-------------------|:--------:|-------:|
+| __Inception Score__ |   2.75   |   2.74 |
+| __FID__              |  124.49  | 146.93 |
 
 
 ## Backend
