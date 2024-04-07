@@ -46,7 +46,9 @@ Overview of the models architecture can be seen on the image below:
 
 *\*insert architecture picture**
 
-Training was done with __80%-20%  train-test__ split, to test the generalization of model on unseen prompts and for
+Training was done on [Oxford 102 Flowers](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/) dataset, with 10 text description
+for each image. Class labels were also utilized for auxiliary classification by the discriminator.
+We also made an __80%-20%  train-test__ split, to test the generalization of model on unseen prompts and for
 __zero_shot__ generation.
 
 Parameters for training were:
@@ -71,6 +73,11 @@ dataset, separately for training and test images.
 | __Inception Score__ |   2.75   |   2.74 |
 | __FID__              |  124.49  | 146.93 |
 
+### Explore
+
+Play around with [explore notebook](deep_learning/main_model/explore.ipynb) to see what images with what prompts you can 
+generate. You can do that with a simple ```jupyter notebook ``` command. Once your notebook tab is open in the browser, navigate
+to the and run its cells.
 
 ## Backend
 For the backend of the web page application that visualizes generated images, 
