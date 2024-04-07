@@ -8,6 +8,42 @@ Required libraries are in requirements.txt file and listed below:
 - numpy
 - matplotlib
 - pydot
+ 
+## Machine learning 
+Machine learning part of this project has two models implemented.
+
+One is a simple __GAN__ implementation that you can use to get familiar with 
+__generative adversarial networks__, how they are modeled to achieve image generation, 
+their training process, etc. This is contained in the [digits_gan](deep_learning/digits_gan) folder.
+
+Second is more complex optimized one inspired by [TAC-GAN](https://github.com/dashayushman/TAC-GAN)
+where the text encoding part of [CLIP](https://github.com/openai/CLIP) model is used as a 
+pretrained text encoder. Folder coresponding with this is 
+[main_model](deep_learning/main_model).
+
+### Technical details
+
+The excellent [PyTorch](https://pytorch.org/) deep learning library and it's submodules are
+used to implement both models. This library of course has the option to speed up the deep learning
+process on __GPU's__ with __Nvidia's CUDA__ library. You check if your GPU is CUDA capable
+[here](https://developer.nvidia.com/cuda-gpus).
+
+To not clutter package installation, two distinct __requirements.txt__ files are present, 
+if you don't  have a capable GPU, you can install dependencies with 
+```pip install -r requirements_cpu.txt```, otherwise use ```pip install -r requirements_gpu.txt```.
+
+Both sub-folders of deep learning contain __training_loop.py__ python script which can be run for
+training of given model. These scripts follow rules listed below.
+- scripts assume the working directory is __sub-folder__ that it is in.
+- every file, such as plots, model checkpoints and reports is saved into the ```saved/``` folder
+ which is also automatically created.
+- to customized number of __training epochs__ and __checkpoints__, you can adjust the variables in the
+begging of the scripts right after imports.
+  - _checkpoints saves generator and discriminator with epoch number in the file name, 
+  as well as generates a row in the progress report plot._
+- to use GPU make sure you put 1 in the __determine_device__ function call like so: ```device = determine_device(1)```
+
+
 
 ## Backend
 For the backend of the web page application that visualizes generated images, 
@@ -22,7 +58,7 @@ highly recommended. More about that in the [Docker](#docker) part.
 
 Manual set-up requires these steps:
 1. Have python 3.10 installed
-2. Install requirements listed in [requirements.txt](requirements.txt)
+2. Install requirements listed in [requirements_cpu.txt](requirements_cpu.txt)
 3. Make sure you are running the command from the root of the repository, 
 as this should be the programs working directory
 4. Run
