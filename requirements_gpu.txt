@@ -10,3 +10,5 @@ Flask==2.2.2
 pydot==1.4.2
 Werkzeug==2.2.2
 numpy==1.26.3
+
+git+https://github.com/openai/CLIP.git
