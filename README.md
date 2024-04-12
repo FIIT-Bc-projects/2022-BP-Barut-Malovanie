@@ -76,8 +76,7 @@ dataset, separately for training and test images.
 ### Explore
 
 Play around with [explore notebook](deep_learning/main_model/explore.ipynb) to see what images with what prompts you can 
-generate. You can do that with a simple ```jupyter notebook ``` command. Once your notebook tab is open in the browser, navigate
-to the and run its cells.
+generate. You can do that with a simple ```jupyter notebook ``` command. Once your notebook tab is open in the browser, navigate to the notebook and run its cells.
 
 ## Backend
 For the backend of the web page application that visualizes generated images, 
