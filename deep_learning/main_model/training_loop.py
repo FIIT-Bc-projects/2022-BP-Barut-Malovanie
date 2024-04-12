@@ -48,7 +48,8 @@ discriminator.apply(init_normal_weights)
 print(discriminator)
 
 fixed_noise = torch.randn(8, latent_dim, 1, 1, device=device)
-fixed_prompts = torch.reshape(encoded, (*encoded.shape, 1, 1))[:8]
+encoded_g = torch.reshape(encoded, (*encoded.shape, 1, 1))
+fixed_prompts = encoded_g[:8]
 
 criterion_disc = nn.BCELoss()
 criterion_class = nn.CrossEntropyLoss()
@@ -61,7 +62,7 @@ print("Starting Training Loop...")
 for epoch in range(num_epochs):
 
     fake = generator(fixed_noise, fixed_prompts).detach().cpu()
-    visualize_images(fake, f"Kappa Chungus {epoch + 1}")
+    visualize_images(fake, f"Images at epoch {epoch + 1}")
 
     if epoch != 0 and epoch in checkpoints:
         with torch.no_grad():
@@ -147,8 +148,8 @@ print(f"Training finished Total duration: {datetime.now() - start_time}")
 save_models(generator, discriminator, "final")
 
 with torch.no_grad():
-    latent_vec = torch.randn(encoded.size(0), latent_dim, 1, 1, device=device)
-    fake = generator(latent_vec, encoded).detach().cpu()
+    latent_vec = torch.randn(encoded_g.size(0), latent_dim, 1, 1, device=device)
+    fake = generator(latent_vec, encoded_g).cpu()
     visualize_images(fake, "Final generated images", save=True, save_path="saved/final_images")
     fake = generator(fixed_noise, fixed_prompts).detach().cpu()
     for image in fake:

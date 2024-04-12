@@ -25,6 +25,15 @@ def init_normal_weights(m):
         nn.init.constant_(m.bias.data, 0)
 
 
+def running_average(arr, window=10):
+    average_data = []
+    for i in range(len(arr) - window + 1):
+        average_data.append(np.mean(arr[i:i + window]))
+    for ind in range(window - 1):
+        average_data.insert(0, np.nan)
+    return average_data
+
+
 def visualize_images(images, title,  save=False, save_path="saved/images", n_row=8):
     plt.figure(figsize=(8, 8))
     plt.axis("off")
@@ -44,11 +53,19 @@ def save_models(generator, discriminator, progress_number, path="saved"):
 
 def visualize_loss(gen_loss, disc_loss, cls_loss=None, save=True, save_path="saved/loss_plot"):
     plt.figure(figsize=(10, 5))
-    plt.title("Generator and Discriminator Loss During Training")
-    plt.plot(gen_loss, label="Gen")
-    plt.plot(disc_loss, label="Disc")
+    ax = plt.gca()
+    ax.set_ylim([0, 10])
+    gen_loss_avg = running_average(gen_loss)
+    disc_loss_avg = running_average(disc_loss)
+    plt.title("Generator and Discriminator Loss")
+    plt.plot(gen_loss, alpha=0.2, color="tab:blue")
+    plt.plot(disc_loss, alpha=0.2, color="tab:green")
+    plt.plot(gen_loss_avg, label="Gen", alpha=0.9, color="tab:blue")
+    plt.plot(disc_loss_avg, label="Disc", alpha=0.9, color="tab:green")
     if cls_loss is not None:
-        plt.plot(cls_loss, label="Class")
+        cls_loss_avg = running_average(cls_loss)
+        plt.plot(cls_loss, alpha=0.2, color="tab:orange")
+        plt.plot(cls_loss_avg, label="Class", alpha=0.9, color="tab:orange")
     plt.xlabel("iterations")
     plt.ylabel("Loss")
     plt.legend()
@@ -58,9 +75,15 @@ def visualize_loss(gen_loss, disc_loss, cls_loss=None, save=True, save_path="sav
 
 
 def visualize_disc_confidence(D_x, D_G_z, save=True, save_path="saved/conf_plot"):
-    plt.plot(D_x, label='D(x)')
-    plt.plot(D_G_z, label='D(G(z))')
-    plt.plot([0.5 for x in range(len(D_x))], label='Ideal')
+    plt.figure(figsize=(10, 5))
+    plt.title("Discriminator Predictions")
+    D_x_avg = running_average(D_x)
+    D_G_z_avg = running_average(D_G_z)
+    plt.plot(D_x, color="tab:blue", alpha=0.2)
+    plt.plot(D_G_z, color="tab:orange", alpha=0.2)
+    plt.plot(D_x_avg, label='D(x)', color="tab:blue", alpha=0.9)
+    plt.plot(D_G_z_avg, label='D(G(z))', color="tab:orange", alpha=0.9)
+    plt.plot([0.5 for x in range(len(D_x))], alpha=0.5, label='Ideal', color="tab:green")
     plt.xlabel("Iterations")
     plt.ylabel("Prediction")
     plt.legend()
@@ -72,7 +95,11 @@ def visualize_disc_confidence(D_x, D_G_z, save=True, save_path="saved/conf_plot"
 
 
 def visualize_disc_acc(acc, save=True, save_path="saved/conf_plot"):
-    plt.plot(acc)
+    plt.figure(figsize=(10, 5))
+    plt.title("Discriminator Classification Accuracy")
+    acc_avg = running_average(acc)
+    plt.plot(acc, alpha=0.2, color="tab:orange")
+    plt.plot(acc_avg, alpha=0.9, color="tab:orange")
     plt.xlabel("Iterations")
     plt.ylabel("Accuracy")
     plt.legend()
