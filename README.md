@@ -65,13 +65,15 @@ Results:
 
 ### Evaluation
 
-Evaluation of model from the technical standpoint was conducted with two metrics, both computed over the entire
-dataset, separately for training and test images.
+Evaluation of model from the technical standpoint was conducted with three metrics, __Inception Score__ and __FID__ were computed
+over the entire dataset, separately for __training__ and __test__ prompts. __Clip Score__, measuring similarity between prompt and generated
+image was computed over __256__ random samples. We also computed __IS__ and __CLIP Score__ for datasets themselves as baseline.
 
-| Metric            |  Train   |   Test |
-|-------------------|:--------:|-------:|
-| __Inception Score__ |   2.75   |   2.74 |
-| __FID__              |  124.49  | 146.93 |
+| Metric              | Train Data | Test Data | Train Synthetic | Test Synthetic |
+|---------------------|:----------:|:---------:|:---------------:|:--------------:|
+| __Inception Score__ |    2.75    |   2.74    |      2.75       |      2.74      |
+| __FID__             |     -      |     -     |     124.49      |     146.93     |
+| __CLIP Score__      |   29.34    |   29.52   |      25.0       |     25.14      |
 
 ### Explore
 
