@@ -1,7 +1,7 @@
 # Painting with neural networks
 
 This repository contains code associated with Bachelor's Thesis, developed by [Jozef Barut](https://github.com/BarutJozef),
-with the supervision of [NGUYEN THU, Giang, doc., Ing., PhD.](https://github.com/giangzuzana) .
+with the supervision of [NGUYEN THU, Giang, doc., Ing., PhD.](https://giangzuzana.github.io/) .
 
 Project aims to train a generative deep learning model for image synthesis. Encapsulating the result into
 web page that can be interaced with easily dockerizing this application.
