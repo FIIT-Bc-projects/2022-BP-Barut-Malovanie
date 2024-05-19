@@ -37,14 +37,13 @@ training of given model. These scripts follow rules listed below.
 - to customized number of __training epochs__ and __checkpoints__, you can adjust the variables in the
 begging of the scripts right after imports.
   - _checkpoints saves generator and discriminator with epoch number in the file name, 
-  as well as generates a row in the progress report plot._
+  as well as generates a row in the progress report plot.
 - to use GPU make sure you put 1 in the __determine_device__ function call like so: ```device = determine_device(1)```
 
 ### Main Model
 
 Overview of the models architecture can be seen on the image below:
-
-*\*insert architecture picture**
+<img width="100%" height="100%" src="deep_learning/main_model/visualizations/combined.png">
 
 Training was done on [Oxford 102 Flowers](https://www.robots.ox.ac.uk/~vgg/data/flowers/102/) dataset, with 10 text description
 for each image. Class labels were also utilized for auxiliary classification by the discriminator.
@@ -61,7 +60,7 @@ Complete inner workings can be seen in [models.py](deep_learning/main_model/mode
 
 Results:
 
-<img align="center" width="100%" height="100%" src="deep_learning/main_model/generated_images.png">
+<img align="center" width="100%" height="100%" src="deep_learning/main_model/visualizations/generated_images.png">
 
 ### Evaluation
 
@@ -71,7 +70,7 @@ image was computed over __256__ random samples. We also computed __IS__ and __CL
 
 | Metric              | Train Data | Test Data | Train Synthetic | Test Synthetic |
 |---------------------|:----------:|:---------:|:---------------:|:--------------:|
-| __Inception Score__ |    2.75    |   2.74    |      2.75       |      2.74      |
+| __Inception Score__ |    3.9     |     3     |      2.75       |      2.74      |
 | __FID__             |     -      |     -     |     124.49      |     146.93     |
 | __CLIP Score__      |   29.34    |   29.52   |      25.0       |     25.14      |
 
