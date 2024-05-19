@@ -13,3 +13,4 @@ Flask==2.2.2
 pydot==1.4.2
 Werkzeug==2.2.2
 clip-score
+git+https://github.com/openai/CLIP.git

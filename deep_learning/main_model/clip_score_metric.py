@@ -10,7 +10,7 @@ from torchvision.utils import save_image
 from models import Generator, Encoder
 sys.path.append('../utils')
 from helpers import determine_device
-from transforms import scale_for_metrics, clip_img_transform
+from transforms import scale_for_metrics
 
 device = determine_device(1)
 print('Using device:', device)
