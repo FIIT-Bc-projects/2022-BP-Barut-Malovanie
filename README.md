@@ -25,6 +25,11 @@ used to implement both models. This library of course has the option to speed up
 process on __GPU's__ with __Nvidia's CUDA__ library. You check if your GPU is CUDA capable
 [here](https://developer.nvidia.com/cuda-gpus).
 
+Make sure to have Python 3.10 installed, and before running any ```pip install``` commands, we highly recommend 
+creating a Python virtual environment with ```python -m venv venv```. 
+You will need to activate it with: ```source venv/bin/activate```.
+
+
 To not clutter package installation, two distinct __requirements.txt__ files are present, 
 if you don't  have a capable GPU, you can install dependencies with 
 ```pip install -r requirements_cpu.txt```, otherwise use ```pip install -r requirements_gpu.txt```.
@@ -39,6 +44,12 @@ begging of the scripts right after imports.
   - _checkpoints saves generator and discriminator with epoch number in the file name, 
   as well as generates a row in the progress report plot.
 - to use GPU make sure you put 1 in the __determine_device__ function call like so: ```device = determine_device(1)```
+
+
+Runnable scripts in the [main_model](deep_learning/main_model) sub-folder also expect a data folder to be present with a 
+structured dataset in it. You can download the dataset from our goodle disk 
+[here](https://drive.google.com/file/d/1Fytz51bDxjygPAS9KpXtEuM3vAfy8LEE/view?usp=sharing). 
+Then unzip the file into the [main_model](deep_learning/main_model/) sub-folder.
 
 ### Main Model
 
@@ -117,7 +128,7 @@ __docker container__.  More about that in the [Docker](#docker) part.
 
 
 Manual set-up requires these steps:
-1. Have [Node.js](https://nodejs.org/en) installed
+1. Have [Node.js](https://nodejs.org/en) (v20.x or higher) with npm installed
 2. in the [frontend/](./frontend) folder execute ```npm install```
 3. Run ```npm run dev``` after the installation is complete
 4. The app should be running right here: http://localhost:5173/
@@ -146,8 +157,8 @@ Replacing the placeholers as an example ```docker build . -t frontend-docker  -f
 
 After the image is build, it can be run via:
 
-* ```Docker run -p 8080:8080 frontend_image_name``` for frontend.
-* ```Docker run -p 8001:5000 backend_image_name``` for backend.
+* ```docker run -p 8080:8080 frontend_image_name``` for frontend.
+* ```docker run -p 8001:5000 backend_image_name``` for backend.
 
 The mapping of ports should be kept as is, because that is where the apps are exposed to your machine.
 
